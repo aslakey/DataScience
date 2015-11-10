@@ -2,12 +2,22 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": 58,
+   "execution_count": 1,
    "metadata": {
     "collapsed": false
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Users/aslakey/anaconda3/lib/python3.4/site-packages/skimage/viewer/utils/core.py:11: UserWarning: Recommended matplotlib backend is `Agg` for full skimage.viewer functionality.\n",
+      "  warnings.warn(\"Recommended matplotlib backend is `Agg` for full \"\n"
+     ]
+    }
+   ],
    "source": [
+    "#_______Consolidated Code for Project\n",
     "import numpy as np\n",
     "from skimage.io import imread\n",
     "from skimage.filters import threshold_otsu\n",
@@ -31,63 +41,34 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 59,
+   "execution_count": 2,
    "metadata": {
-    "collapsed": false
+    "collapsed": true
    },
    "outputs": [],
    "source": [
     "#Read file into array as greyscale (need to eventually change to user uploaded image)\n",
-    "#filename = os.path.join(skimage.data_dir, 'P:\\\\School\\\\Python_Fall2015\\\\Project\\\\sampleImage.jpg')\n",
     "filename = os.path.join(skimage.data_dir, 'quote_image.png') #change file name accordingly\n",
-    "chk = io.imread(filename,as_grey = True) #returns greyscale image\n"
+    "chk = io.imread(filename,as_grey = True) #returns greyscale image"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 60,
+   "execution_count": 3,
    "metadata": {
-    "collapsed": false
+    "collapsed": true
    },
    "outputs": [],
    "source": [
     "#Process one Denoise and Increase Contrast\n",
-    "image = restoration.denoise_tv_chambolle(chk, weight=0.1) #Denoisesusing total variation: http://scikit-image.org/docs/dev/api/skimage.restoration.html\n",
-    "thresh = threshold_otsu(image) #Thresholding returns a binary image (black or white) on a greyscale image\n",
-    "bw = closing(image > thresh, square(2))\n",
-    "\n",
-    "#This keeps the edges really crisp (and is simple) should we use this??\n",
-    "binary = image > thresh\n",
-    "#toimage(binary).show()\n",
-    "\n",
-    "cleared = bw.copy() #Copy to identify shapes in bw image\n",
-    "#viewer = ImageViewer(cleared)\n",
-    "#viewer.show()\n"
+    "image = restoration.denoise_tv_chambolle(chk, weight=0.1) #Denoises using total variation: http://scikit-image.org/docs/dev/api/skimage.restoration.html\n"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 4,
    "metadata": {
     "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
    },
    "outputs": [],
    "source": [
@@ -99,8 +80,26 @@
     "labels, _ = ndi.label(segmentation)\n",
     "#toimage(labels).show()\n",
     "image_label_overlay = label2rgb(labels, image=chk)\n",
-    "#toimage(image_label_overlay).show()\n",
-    "\n",
+    "#toimage(image_label_overlay).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[108, 284, 153, 302], [108, 336, 153, 354], [108, 440, 153, 457], [108, 528, 153, 546], [108, 716, 153, 734], [108, 768, 153, 785], [108, 821, 153, 838], [109, 192, 153, 212], [109, 215, 153, 230], [109, 305, 153, 323], [109, 355, 153, 377], [109, 409, 153, 428], [109, 460, 153, 480], [109, 482, 153, 503], [109, 548, 153, 564], [109, 575, 153, 594], [109, 596, 153, 616], [109, 618, 153, 634], [109, 646, 153, 664], [109, 667, 153, 675], [109, 677, 153, 695], [109, 697, 153, 714], [109, 736, 153, 755], [109, 758, 153, 765], [109, 841, 153, 858], [174, 510, 219, 528], [174, 580, 219, 598], [174, 651, 219, 669], [174, 721, 219, 739], [175, 231, 219, 251], [175, 253, 219, 273], [175, 275, 219, 292], [175, 332, 219, 339], [175, 366, 219, 384], [175, 432, 219, 454], [175, 455, 219, 475], [175, 476, 219, 486], [175, 490, 219, 508], [175, 530, 219, 549], [175, 601, 219, 619], [175, 622, 219, 640], [175, 670, 219, 692], [175, 693, 219, 700], [175, 704, 219, 719], [286, 376, 316, 388], [286, 411, 316, 425], [286, 427, 316, 439], [286, 457, 316, 470], [286, 472, 316, 484], [286, 510, 316, 523], [286, 526, 316, 538], [286, 540, 316, 552], [286, 607, 316, 619], [373, 426, 392, 446]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Process 3 Collect these regions filtering out small ones:\n",
     "fig, ax = plt.subplots(ncols=1, nrows=1, figsize=(6, 6))\n",
     "ax.imshow(image_label_overlay)\n",
     "\n",
@@ -119,126 +118,24 @@
     "    ax.add_patch(rect)\n",
     "\n",
     "plt.show()\n",
-    "print (candidates)\n",
-    "\n",
-    "#now find regions\n",
-    "#regions = measure.regionprops(labels)\n",
-    "'''\n",
-    "candidate_coords = []\n",
-    "for region in regionprops(edges):\n",
-    "    if region.area>2: #arbitrary skip of small regions\n",
-    "        start_x, start_y, end_x, end_y = region.bbox\n",
-    "        cropped_image = chk[start_x:end_x,start_y:end_y]\n",
-    "        candidate_coords.append(end_x)\n",
-    "print (candidate_coords)\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n",
-    "coordinates = []\n",
-    "i=0\n",
-    "       \n",
-    "for region in regionprops(label_image):\n",
-    "    if region.area > 10:\n",
-    "        minr, minc, maxr, maxc = region.bbox\n",
-    "        margin = 3\n",
-    "        minr, minc, maxr, maxc = minr-margin, minc-margin, maxr+margin, maxc+margin\n",
-    "        roi = chk[minr:maxr, minc:maxc]\n",
-    "        if roi.shape[0]*roi.shape[1] == 0:\n",
-    "            continue\n",
-    "        else:\n",
-    "            if i==0:\n",
-    "                samples = resize(roi, (20,20))\n",
-    "                coordinates.append(region.bbox)\n",
-    "                i+=1\n",
-    "            elif i==1:\n",
-    "                roismall = resize(roi, (20,20))\n",
-    "                samples = np.concatenate((samples[None,:,:], roismall[None,:,:]), axis=0)\n",
-    "                coordinates.append(region.bbox)\n",
-    "                i+=1\n",
-    "            else:\n",
-    "                roismall = resize(roi, (20,20))\n",
-    "                samples = np.concatenate((samples[:,:,:], roismall[None,:,:]), axis=0)\n",
-    "                coordinates.append(region.bbox)\n",
-    "\n",
-    "candidates = {\n",
-    "                    'fullscale': samples,          \n",
-    "                    'flattened': samples.reshape((samples.shape[0], -1)),\n",
-    "                    'coordinates': np.array(coordinates)\n",
-    "                    }\n",
-    "\n",
-    "'''"
+    "print (candidates)"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {
     "collapsed": true
    },
    "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 26,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "[[  4 173  13 186]\n",
-      " [ 19 175  28 183]\n",
-      " [ 19 193  29 203]\n",
-      " ..., \n",
-      " [943  14 947  17]\n",
-      " [950 141 953 147]\n",
-      " [952 107 960 110]]\n"
-     ]
-    }
-   ],
    "source": [
-    "from scipy.misc import toimage\n",
-    "print(candidates['coordinates'])\n",
-    "test = chk[59:113,628:695]\n",
-    "toimage(test).show()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "from skimage.segmentation import clear_border\n",
-    "from skimage import data\n",
-    "image = data.coins()[50:-50, 50:-50]\n",
-    "\n",
-    "# apply threshold\n",
-    "thresh = threshold_otsu(image)\n",
-    "bw = closing(image > thresh, square(3))\n",
-    "\n",
-    "# remove artifacts connected to image border\n",
-    "cleared = bw.copy()\n",
-    "clear_border(cleared)"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "print(samples)"
+    "#Process 4: decide if Region is a character or not!\n",
+    "sample = candidates[3]\n",
+    "max_x = sample[0]\n",
+    "max_y=sample[1]\n",
+    "min_x=sample[2]\n",
+    "min_y=sample[3]\n",
+    "toimage(image[max_x:min_x,max_y:min_y]).show()"
    ]
   },
   {
